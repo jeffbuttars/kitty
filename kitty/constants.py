@@ -14,6 +14,7 @@ version = (0, 5, 0)
 str_version = '.'.join(map(str, version))
 _plat = sys.platform.lower()
 is_macos = 'darwin' in _plat
+base = os.path.dirname(os.path.abspath(__file__))
 
 
 ScreenGeometry = namedtuple('ScreenGeometry', 'xstart ystart xnum ynum dx dy')
@@ -54,4 +55,11 @@ terminfo_dir = os.path.join(base_dir, 'terminfo')
 logo_data_file = os.path.join(base_dir, 'logo', 'kitty.rgba')
 shell_path = pwd.getpwuid(os.geteuid()).pw_shell or '/bin/sh'
 
-iswayland = False
+
+def glfw_path(module):
+    return os.path.join(base, 'glfw-{}.so'.format(module))
+
+
+is_wayland = False
+if os.environ.get('WAYLAND_DISPLAY') and os.path.exists(glfw_path('wayland')):
+    is_wayland = True
